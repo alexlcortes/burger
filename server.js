@@ -36,3 +36,37 @@ connection.connect(function(err) {
   console.log('connected as id ' + connection.threadId);
 
 });
+
+app.get('/', function(req,res) {
+    connection.query('SELECT * FROM plans;', function(err, data) {
+      if (err) throw err;
+
+      res.render('index', {plans: data});
+
+    });
+});
+
+app.post('/create', function(req,res){
+    connection.query('INSERT INTO plans (plan) VALUES (?)', [req.body.plan], function(err, result) {
+      if (err) throw err;
+      res.redirect('/');
+    });
+});
+
+app.delete('/delete', function(req,res){
+    connection.query('DELETE FROM plans WHERE id = ?', [req.body.id], function(err, result) {
+      if (err) throw err;
+      res.redirect('/');
+    });
+});
+
+app.put('/update', function(req,res){
+    connection.query('UPDATE plans SET plan = ? WHERE id = ?', [req.body.plan, req.body.id], function(err, result) {
+      if (err) throw err;
+      res.redirect('/');
+    });
+});
+
+var port = 3000;
+app.listen(port);
+console.log("Please eat a burger");
